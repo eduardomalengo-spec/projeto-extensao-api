@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAC - Segurança Comunitária</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f6f9; margin: 0; padding: 20px; color: #333; }
+        .container { max-width: 600px; background: white; margin: 20px auto; padding: 30px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        h2 { color: #1e3a8a; margin-top: 0; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #4b5563; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea { resize: vertical; height: 80px; }
+        
+        .btn-azul { background-color: #2563eb; color: white; border: none; padding: 12px 20px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s; }
+        .btn-azul:hover { background-color: #1d4ed8; }
+        .btn-verde { background-color: #10b981; color: white; border: none; padding: 10px 15px; font-size: 14px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; }
+        .btn-verde:hover { background-color: #059669; }
+
+        .message { margin-top: 15px; padding: 12px; border-radius: 6px; display: none; font-weight: bold; }
+        .success { background-color: #d1fae5; color: #065f46; border: 1px solid #10b981; }
+        
+        /* Seções de Murais e Listas */
+        .mural-container { max-width: 600px; margin: 30px auto; }
+        .mural-titulo { color: #1e3a8a; font-size: 18px; font-weight: bold; margin-bottom: 12px; border-bottom: 2px solid #3b82f6; padding-bottom: 4px; }
+        
+        .card-relato { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.05); margin-bottom: 12px; border-left: 4px solid #ef4444; }
+        .card-feedback { background: #eff6ff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); margin-bottom: 12px; border-left: 4px solid #3b82f6; }
+        
+        .card-header { display: flex; justify-content: space-between; font-size: 12px; color: #6b7280; margin-bottom: 6px; font-weight: bold; }
+        .badge-vermelha { background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; }
+        .badge-azul { background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; }
+        .card-texto { font-size: 14px; color: #374151; line-height: 1.4; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🔒 Relato de Incidentes de Segurança</h2>
+    <p style="font-size: 14px; color: #6b7280;">Ajude a proteger nossa comunidade de Osasco relatando tentativas de golpes digitais.</p>
+    
+    <form id="formRelato">
+        <div class="form-group">
+            <label for="tipo_golpe">Tipo do Golpe</label>
+            <select id="tipo_golpe" required>
+                <option value="">Selecione uma opção...</option>
+                <option value="Phishing WhatsApp">Golpe / Clonagem de WhatsApp</option>
+                <option value="Falso Link SMS">SMS com Link Falso (Banco/Correios)</option>
+                <option value="Falso Atendente">Ligação de Falsa Central de Segurança</option>
+                <option value="Outros">Outros Golpes Digitais</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="data_ocorrencia">Data do Ocorrido</label>
+            <input type="date" id="data_ocorrencia" required>
+        </div>
+        <div class="form-group">
+            <label for="descricao">Descrição do Golpe</label>
+            <textarea id="descricao" placeholder="Ex: Recebi uma mensagem dizendo..." required></textarea>
+        </div>
+        <button type="submit" class="btn-azul">Enviar Relato para Auditoria</button>
+    </form>
+    <div id="msgResponse" class="message"></div>
+</div>
+
+<div class="mural-container">
+    <div class="mural-titulo">📢 Mural de Alertas da Comunidade</div>
+    <div id="muralRelatos">Carregando relatos...</div>
+</div>
+
+<div class="container" style="border-top: 4px solid #10b981;">
+    <h2>⭐ Avaliação do Cidadão</h2>
+    <p style="font-size: 14px; color: #6b7280;">O que você achou dessa ferramenta de extensão universitária? Deixe sua opinião honesta!</p>
+    
+    <form id="formFeedback">
+        <div class="form-group" style="display: flex; gap: 15px;">
+            <div style="flex: 2;">
+                <label for="fb_nome">Seu Nome / Iniciais</label>
+                <input type="text" id="fb_nome" placeholder="Ex: Maria L. ou Anônimo" required>
+            </div>
+            <div style="flex: 1;">
+                <label for="fb_nota">Nota (1 a 5)</label>
+                <select id="fb_nota" required>
+                    <option value="5">⭐⭐⭐⭐⭐ (5)</option>
+                    <option value="4">⭐⭐⭐⭐ (4)</option>
+                    <option value="3">⭐⭐⭐ (3)</option>
+                    <option value="2">⭐⭐ (2)</option>
+                    <option value="1">⭐ (1)</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="fb_comentario">Avaliação Construtiva</label>
+            <textarea id="fb_comentario" placeholder="Escreva o que achou da utilidade e facilidade do sistema..." required></textarea>
+        </div>
+        <button type="submit" class="btn-verde">Enviar Avaliação do Sistema</button>
+    </form>
+    <div id="msgFeedbackResponse" class="message success" style="text-align: center; margin-top: 10px;">Obrigado! Seu feedback foi publicado.</div>
+</div>
+
+<div class="mural-container">
+    <div class="mural-titulo">💬 O que as pessoas estão dizendo sobre o projeto</div>
+    <div id="muralFeedbacks">Carregando avaliações...</div>
+</div>
+
+<script>
+    // URL base da nossa API local
+    const API_URL = 'http://localhost:3000/api';
+
+    // FUNÇÃO: Carrega o mural de relatos (Golpes)
+    async function carregarRelatos() {
+        const div = document.getElementById('muralRelatos');
+        try {
+            const res = await fetch(`${API_URL}/relatos`);
+            const dados = await res.json();
+            if (dados.length === 0) { div.innerHTML = '<p style="font-size:14px;color:#6b7280;">Nenhum alerta registrado.</p>'; return; }
+            div.innerHTML = dados.map(r => `
+                <div class="card-relato">
+                    <div class="card-header"><span class="badge-vermelha">${r.tipo_golpe}</span><span>Ocorrido: ${r.data_ocorrencia}</span></div>
+                    <div class="card-texto">${r.descricao}</div>
+                </div>
+            `).join('');
+        } catch { div.innerHTML = '<p style="color:red;">Erro ao carregar alertas.</p>'; }
+    }
+
+    // FUNÇÃO: Carrega o mural de feedbacks (Opinião das pessoas)
+    async function carregarFeedbacks() {
+        const div = document.getElementById('muralFeedbacks');
+        try {
+            const res = await fetch(`${API_URL}/feedbacks`);
+            const dados = await res.json();
+            if (dados.length === 0) { div.innerHTML = '<p style="font-size:14px;color:#6b7280;">Nenhuma avaliação postada ainda.</p>'; return; }
+            div.innerHTML = dados.map(f => `
+                <div class="card-feedback">
+                    <div class="card-header"><span class="badge-azul">👤 ${f.nome}</span><span>Nota: ${'⭐'.repeat(f.nota)}</span></div>
+                    <div class="card-texto" style="font-style: italic;">"${f.comentario}"</div>
+                </div>
+            `).join('');
+        } catch { div.innerHTML = '<p style="color:red;">Erro ao carregar feedbacks.</p>'; }
+    }
+
+    // Inicializa carregando tudo do banco assim que abre a página
+    window.onload = () => {
+        carregarRelatos();
+        carregarFeedbacks();
+    };
+
+    // EVENTO: Envio do Formulário de Relatos
+    document.getElementById('formRelato').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        btn.disabled = true; btn.innerText = "Gravando...";
+        
+        const data = {
+            tipo_golpe: document.getElementById('tipo_golpe').value,
+            data_ocorrencia: document.getElementById('data_ocorrencia').value,
+            descricao: document.getElementById('descricao').value
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/relatos`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+            const result = await response.json();
+            const msgDiv = document.getElementById('msgResponse');
+            
+            if (response.ok) {
+                msgDiv.className = "message success"; msgDiv.style.textAlign = "left"; msgDiv.style.display = "block";
+                msgDiv.innerHTML = `
+                    <p style="text-align: center; font-size: 16px; margin-top: 0;"><strong>🎉 Sucesso! Registro nº ${result.id} enviado para o banco de dados comunitário.</strong></p>
+                    <hr style="border: 0; border-top: 1px solid #10b981; margin: 15px 0;">
+                    <p style="color: #b91c1c; font-weight: bold; margin-bottom: 5px;">⚠️ ATENÇÃO: ESTE É UM PROJETO ACADÊMICO DE MAPEAMENTO.</p>
+                    <p style="font-size: 13px; color: #374151; margin-top: 0;">Este sistema serve para fins estatísticos de extensão universitária e <strong>NÃO substitui o registro policial oficial</strong>.</p>
+                    <p style="font-weight: bold; margin-bottom: 5px; color: #1e3a8a;">🚨 PASSOS IMEDIATOS PARA SUA SEGURANÇA:</p>
+                    <ul style="font-size: 13px; color: #374151; padding-left: 20px; margin-top: 0;">
+                        <li><strong>Registre o B.O. Oficial:</strong> Acesse a <a href="https://www.delegaciaeletronica.policiacivil.sp.gov.br" target="_blank" style="color: #2563eb; font-weight: bold;">Delegacia Eletrônica de SP</a>.</li>
+                        <li><strong>Caiu no golpe do PIX?</strong> Solicite o <strong>MED (Mecanismo Especial de Devolução)</strong> no seu banco.</li>
+                    </ul>
+                `;
+                document.getElementById('formRelato').reset();
+                carregarRelatos();
+            }
+        } catch { alert("Erro ao conectar no servidor."); }
+        finally { btn.disabled = false; btn.innerText = "Enviar Relato para Auditoria"; }
+    });
+
+    // EVENTO: Envio do Formulário de Feedbacks
+    document.getElementById('formFeedback').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = e.target.querySelector('button');
+        btn.disabled = true;
+
+        const data = {
+            nome: document.getElementById('fb_nome').value,
+            nota: parseInt(document.getElementById('fb_nota').value),
+            comentario: document.getElementById('fb_comentario').value
+        };
+
+        try {
+            const response = await fetch(`${API_URL}/feedbacks`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const msgFB = document.getElementById('msgFeedbackResponse');
+                msgFB.style.display = "block";
+                setTimeout(() => { msgFB.style.display = "none"; }, 4000);
+                document.getElementById('formFeedback').reset();
+                carregarFeedbacks(); // Recarrega o mural de opiniões na hora!
+            }
+        } catch { alert("Erro ao enviar avaliação."); }
+        finally { btn.disabled = false; }
+    });
+</script>
+</body>
+</html>
